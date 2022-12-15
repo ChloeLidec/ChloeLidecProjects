@@ -17,9 +17,6 @@ Here is a quick exemple of the use of JDBC I did for school.
 
 In this you can see a website I created in 1ère with Laura Leroy. It was done to present our school and the NSI subject.
 
-## SiteSupergirlLidec
-
-In this directory, you can see a website I did as part of my first semester in BUT Informatique. It's a website about the show called Supergirl and three pages are completed.
 
 ## Système
 
@@ -50,3 +47,11 @@ In this is a website not connected to a server that I made for school for a proj
 ## JeuAirplane_war
 
 In this is a game that I created along with one of my classmates. All the information about it is in the README of the directory
+
+## Site Flask
+
+In this is a web application that I created during my Web lessons. It uses Flask and is connected to a database. It's a simple website that allows you to create an account, browse the database and add/change some data to it.
+
+## Projet SAE 2022-2023 Jupillat
+
+In this is the start of a project we are working on for school. It's a website that will be used to manage some of the school's activities. It's not finished yet. It will use Flask and will be connected to a database and also will get data from Internet thanks to Selenium. 

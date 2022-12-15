@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static',
+filename='home.css')}}">
+<link rel="stylesheet" href="{{ url_for('static',
+filename='detail.css')}}">
+{% endblock %}
+{% block content %}
+<h1>Author: {{ author.name }}</h1>
+<a href="{{ url_for ('edit_author', id= author.id) }}">
+    <button type="button" class="btn btn-primary">Edit</button>
+</a>
+<h2>Books:</h2>
+<ul>
+{% for book in author.books %}
+<li><a href="{{ url_for('detail', id=book.id) }}">
+    <img src="{{ url_for('static', filename='images/'+book.img) }}"
+alt="{{book.title}}"></a>
+<p id="prix">{{book.price}} €</p>
+<p>{{book.id}}</p>
+</li>
+{% endfor %}
+</ul>
+{% endblock %}
+

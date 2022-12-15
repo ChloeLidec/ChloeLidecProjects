@@ -1,0 +1,14 @@
+main .container{
+    margin: 3%;
+    padding: 2%;
+}
+.log{
+    margin-left: 45%;
+    margin-right: 45%;
+    color: brown;
+    padding: 2%;
+}
+.but-log{
+    margin:1em;
+    padding: 10%;
+}

@@ -1,0 +1,2 @@
+FLASK_APP=myappwtf
+FLASK_ENV=development
