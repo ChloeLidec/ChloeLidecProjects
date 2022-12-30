@@ -4,9 +4,9 @@
 {% endblock %}
 {% block content %}
 <form class="form-horizontal" role="form" method ="POST"
-action ="{{ url_for('login') }}">
+action ="{{ url_for('register') }}">
 {{ form.hidden_tag() }}
-    {% if form.username.errors %}
+{% if form.username.errors %}
     <div class = "form-group has-error">
     {% else %}
     <div class = "form-group">
@@ -24,32 +24,40 @@ action ="{{ url_for('login') }}">
 >{{ form.username.label }}</label>
 <div class ="col-sm-10">
 {{ form.username(size =50, class_="form-control",placeholder="Username") }}
-</div></div>
-    {% if form.password.errors %}
-    <div class = "form-group has-error">
-    {% else %}
-    <div class = "form-group">
-    {% endif %}
-    {%if form.password.errors %}
-    <ul class="list-group ">
-        {% for error in form.password.errors %}
-        <li class="list-group
-        -item list-group-item-danger">
-            {{ error }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+</div>
+</div>
+<div class ="form-group">
 <label for="password" class ="col-sm-2 control-label"
 >{{ form.password.label }}</label>
 <div class ="col-sm-10">
 {{ form. password (size =50, class_="form-control ",placeholder ="Password ") }}
 </div>
 </div>
+{% if form.confirm.errors %}
+    <div class = "form-group has-error">
+    {% else %}
+    <div class = "form-group">
+    {% endif %}
+    {%if form.confirm.errors %}
+    <ul class="list-group
+    ">
+        {% for error in form.confirm.errors %}
+        <li class="list-group
+        -item list-group-item-danger">
+            {{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <label for="confirm" class ="col-sm-2 control-label"
+    >{{ form.confirm.label }}</label>
+    <div class ="col-sm-10">
+    {{ form. confirm (size =50, class_="form-control ",placeholder ="Confirm password ") }}
+</div>
+</div>
 <div class ="form-group">
 <div class ="col-sm-offset-2 col-sm-10">
-<button type=" submit " class ="btn btn-default">Sign in</button>
+<button type=" submit " class ="btn btn-default">Sign up</button>
 </div>
 </div>
 </form>
-<a href="{{ url_for('register') }}">Not registered? Sign up now!</a>
 {% endblock %}

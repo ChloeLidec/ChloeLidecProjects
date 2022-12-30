@@ -9,10 +9,22 @@ filename='detail.css')}}">
 {% block content %}
 <h1>{{book.title}}</h1>
 <div>
+<a href="{{ url_for ('edit_book', id= book.id) }}">
+    <button type="button" class="btn btn-primary">Edit</button>
+</a>
 <a href="{{book.url}}" target="_blank">
 <img src="{{ url_for('static', filename='images/'+book.img) }}"
 alt="{{book.title}}"></a>
 <p id="prix">{{book.price}} €</p>
 <a href="{{url_for('detail_author', id=book.author.id)}}">{{book.author.name}}</a>
+<ul>
+    {% for g in genres %}
+    <li><a href="{{url_for('detail_genre', id=g.id)}}">
+    {{g.name}}</a></li>
+    {% endfor %}
+    </ul>
+<a href="{{ url_for ('delete_book', id= book.id) }}">
+    <button type="button" class="btn btn-primary">Delete</button>
+</a>
 </div>
 {% endblock %}

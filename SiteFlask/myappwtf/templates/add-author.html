@@ -3,13 +3,11 @@
 <h1>Add author:</h1>
 <form role="form" method ="POST" action ="{{ url_for('save_author')}}">
 {{ form.hidden_tag() }}
-    <div class =
     {% if form.name.errors %}
-    "form-group has-error"
+    <div class = "form-group has-error">
     {% else %}
-    "form-group "
+    <div class = "form-group">
     {% endif %}
-    >
     {{ form.name.label }} {{ form.name(size =50,
     class_="form-control") }}
     </div>    
@@ -21,6 +19,6 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <input class="btn btn-default" type="submit" value ="Enregistrer">
+    <input class="btn btn-default" type="submit" value ="Save">
 </form>
 {% endblock %}

@@ -19,7 +19,7 @@
         <!-- Fixed navbar -->
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">My Books</a>
+                <a class="navbar-brand" href="{{ url_for('home')}}">Home</a>
                 <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle
@@ -29,21 +29,20 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                    <a class="nav-link active" aria-current="page"
-                        href="{{url_for('home')}}">Home</a>
+                    <a class="nav-link" href="{{ url_for('books',id=1)}}">Books</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link" href="{{ url_for('authors',id=1)}}">Authors</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link disabled">Disabled</a>
-                    </li>
+                        <a class="nav-link" href="{{ url_for('genres',id=1)}}">Genres</a>
+                        </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
-                    <li><p class="text-white bg-dark">{{ current_user.username }}</p></li >
-                    <li ><button type="button" class="btn btn-info"><a href="{{ url_for('logout') }}">
-                    Logout</a></button></li >
+                    <li><a class="text-white bg-dark" href="{{ url_for('edit_user' , name=current_user.username)}}">{{ current_user.username }}</a></li>
+                    <li><button type="button" class="btn btn-info"><a href="{{ url_for('logout') }}">
+                    Logout</a></button></li>
                     {% endif %}
                     {% if not current_user.is_authenticated %}
                     <li ><button type="button" class="btn btn-info">
@@ -62,7 +61,12 @@
             </nav>
             </header>
         <!-- Your page content -->
-        <main class="flex-shrink-0">
+        
+        <main class="d-flex flex-shrink-0">
+        <aside class="p-4">
+            {% block aside %}
+            {% endblock %}
+        </aside>
         <div class="container">
         {% block content %}
         {% endblock %}
@@ -70,7 +74,7 @@
         </main>
         <footer class="footer mt-auto py-3 bg-light">
         <div class="container">
-        <span class="text-muted">Place sticky footer content here.</span>
+        <span class="text-muted">Books, authors and pictures are not my property</span>
         </div>
         </footer>
         {% block scripts %}
