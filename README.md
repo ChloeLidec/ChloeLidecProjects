@@ -39,14 +39,17 @@ I coded this game along with three classmates for a school project.
 ## Allo45 Application
 
 It's an application that I developped along with four classmates for a imaginary company. There's two modules, one for an analyst and one for a pollster. You can't launch the app directly, you'll need to launch a podman first and load the database with the creation files. 
+It was updated by a maintenance during my semester at the Cegep of Matane.
 
 ## SiteWebQuizzJS
 
 In this is a website not connected to a server that I made for school for a project that consisted in using JS to create some quizzes.
+It was updated by a maintenance during my semester at the Cegep of Matane.
 
 ## JeuAirplane_war
 
-In this is a game that I created along with one of my classmates. All the information about it is in the README of the directory
+In this is a game that I created along with one of my classmates. All the information about it is in the README of the directory.
+It was updated by a maintenance during my semester at the Cegep of Matane.
 
 ## Site Flask
 
