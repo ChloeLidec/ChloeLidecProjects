@@ -9,6 +9,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
+import java.sql.SQLException;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -18,16 +21,32 @@ public class FenetreFinAnalyste  extends BorderPane {
     private Label nomEnt ;
     private Label textent1 ;
     private Label textent2 ;
-    private AnalysteJDBC ana;
+    private AnalysteDAO ana;
+    private FenetreAnalyste fenAna;
+    private AppliAllo45 app;
     private Button ba;
 
-    public FenetreFinAnalyste(AnalysteJDBC ana,Button ba){
+    public FenetreFinAnalyste(AnalysteDAO ana,Button ba,FenetreAnalyste fenAna,AppliAllo45 app){
         super();
         this.ana=ana;
         this.ba=ba;
-        this.nomEnt = new Label("Nom entreprise");
-        this.textent1 = new Label("Intérogés "+this.ana.getSondage().getPanel().getListSonde().size());
-        this.textent2 =new Label("Réponses complètes "+this.ana.getSondage().getPanel().getListSonde().size());
+        this.fenAna = fenAna;
+        this.app=app;
+        try {
+            this.nomEnt = new Label(this.ana.getEntreprise());
+        } catch (SQLException e) {
+            this.nomEnt = new Label("Entreprise introuvable");
+        }
+        try {
+            this.textent1 = new Label("Intérogés "+this.ana.getInterroges());
+        } catch (SQLException e) {
+            this.textent1 = new Label("Nombre d'intérogés introuvable");
+        }
+        try {
+            this.textent2 =new Label("Réponses complètes "+this.ana.getReponsesComplettes());
+        } catch (SQLException e) {
+            this.textent2 =new Label("Nombre de réponses complètes introuvable");
+        }
         this.setStyle(" -fx-base: #ebebeb;");
         this.setTop(this.top());
         this.setCenter(this.gridPane());
@@ -95,16 +114,14 @@ public class FenetreFinAnalyste  extends BorderPane {
         centerTest.setSpacing(30);
         Button bretour = new Button("  Retour \nSondage");
         bretour.setPrefSize(150, 75);
-        bretour.setStyle("-fx-font: 22 arial; -fx-base: #c2bbf0;-fx-background-radius: 10px;");  
+        bretour.setStyle("-fx-font: 22 arial; -fx-base: #c2bbf0;-fx-background-radius: 10px;");
+        bretour.setOnAction(new ControlleurAllerQ(this.app, ana, null, fenAna));
         Button bclore = new Button("   Clore \nSondage");
         bclore.setPrefSize(150, 75);
-        bclore.setStyle("-fx-font: 22 arial; -fx-base: #5ce1e6;-fx-background-radius: 10px;");       
-        Button bgenerer = new Button("Générer \n    PDF");
-        bgenerer.setPrefSize(150, 75);
-        bgenerer.setStyle("-fx-font: 22 arial; -fx-base: #f1e3f3;-fx-background-radius: 10px;");
+        bclore.setStyle("-fx-font: 22 arial; -fx-base: #5ce1e6;-fx-background-radius: 10px;");
+        bclore.setOnAction(new ControlleurAccueil(this.app));
         centerTest.getChildren().add(bretour);
         centerTest.getChildren().add(bclore);
-        centerTest.getChildren().add(bgenerer);
         centerTest.setPadding(new Insets(10));
         zonetxt.setStyle("-fx-background-color: #FFFFFF;");
         zonetxt.getChildren().addAll(centerTest);

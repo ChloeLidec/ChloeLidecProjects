@@ -17,7 +17,7 @@ public class FenetreAccueilAnalyste extends BorderPane{
     protected Button deconnexion;
     private GeneralJDBC gene;
     private AppliAllo45 app;
-    private AnalysteJDBC ana;
+    private AnalysteDAO ana;
 
     /**
      * constructeur
@@ -28,7 +28,7 @@ public class FenetreAccueilAnalyste extends BorderPane{
      * @throws SQLException
      * @throws ParseException
      */
-    public FenetreAccueilAnalyste(Button b,GeneralJDBC gen,AppliAllo45 app,AnalysteJDBC ana) throws SQLException, ParseException{
+    public FenetreAccueilAnalyste(Button b,GeneralJDBC gen,AppliAllo45 app,AnalysteDAO ana) throws SQLException, ParseException{
         super();
         this.gene=gen;
         this.app=app;
@@ -74,7 +74,7 @@ public class FenetreAccueilAnalyste extends BorderPane{
         for(Sondage sondage: gene.getSondageAnalyste()){
             if(i<7){
                 Button sond = new Button(sondage.getTitreS());
-                sond.setOnAction(new ControleurAnalyste(this.app));
+                sond.setOnAction(new ControlleurAnalyste(this.app));
                 sond.setStyle("-fx-font: 38 arial; -fx-base: #c2bbf0;");
                 sond.setPadding(new Insets(50,50,50,50));
                 i ++ ;
