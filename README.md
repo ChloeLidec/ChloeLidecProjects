@@ -2,21 +2,9 @@
 
 Here you can find all the projects I finished, wether at school or by myself.
 
-## Dev Python
-
-You can find in this directory:
-
-- [ ] Sae1_exploit_csv : It's a project for school. We had to create multiple functions in order to intercat with a csv file. The functions were all tested and there's also one file designed to intercat with an user that wants informations. 
-- [ ] tp10_matrices : It's a TP for school where we had multiple exercises including one to exploit matrixes.
-
 ## JDBC
 
 Here is a quick exemple of the use of JDBC I did for school.
-
-## Jean Zay NSI presentation
-
-In this you can see a website I created in 1ère with Laura Leroy. It was done to present our school and the NSI subject.
-
 
 ## Système
 
