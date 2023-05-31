@@ -8,7 +8,7 @@ Here is a quick exemple of the use of JDBC I did for school.
 
 ## Système
 
-In this directory, you can find few files in bash that I made for me to be able to create my configuration faster when I use the school's computers
+In this directory, you can find few files in bash that I made for me to be able to create my configuration faster when I use the school's computers. It has been updated by a maintenance during my semester at the Cegep of Matane and is now able to show windows to select more easily what I want to do.
 
 ## Cyber attack at IUT'O
 
@@ -46,3 +46,7 @@ In this is a web application that I created during my Web lessons. It uses Flask
 ## Projet SAE 2022-2023 Jupillat
 
 In this is the start of a project we are working on for school. It's a website that will be used to manage some of the school's activities. It's not finished yet. It will use Flask and will be connected to a database and also will get data from Internet thanks to Selenium. 
+
+## Projet specialisé 2023
+
+This is a game I made in Unity during my session at the Cegep of Matane. It's a 3D mobile game where you can do missions and explore the map. Read the README in the directory for more information.
