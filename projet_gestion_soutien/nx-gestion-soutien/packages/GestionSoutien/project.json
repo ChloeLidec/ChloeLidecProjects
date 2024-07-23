@@ -1,0 +1,35 @@
+{
+  "name": "gestionsoutien",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "packages/GestionSoutien",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/GestionSoutien",
+        "commands": [
+          {
+            "command": "python3 manage.py runserver"
+          }
+        ]
+      }
+    },
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "packages/GestionSoutien/cypress.config.ts",
+        "testingType": "e2e",
+        "baseUrl": "http://localhost:8000"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/GestionSoutien/**/*.ts"]
+      }
+    }
+  },
+  "implicitDependencies": []
+}

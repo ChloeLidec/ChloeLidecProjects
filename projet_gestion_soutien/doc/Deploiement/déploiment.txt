@@ -1,0 +1,3 @@
+Dans ce répertoire vous trouverez un requirements.txt pour le bon fonctionnement de l'application il faut lancer un pip -r requirements.txt 
+pour installer toute les dépendance nécessaire au bon fonctionnement de l'applicatin mais il faut aussi clone le dépot au préalable puis 
+se placer à la racine et enfin déployer l'application en lançant le script startServer.sh

@@ -1,0 +1,21 @@
+<th class="text-center align-middle">Moyenne</th>
+                    <th class="text-center align-middle">
+                    <select class="form-select" name="groupe-bandeau" hx-get="{% url 'QCM:get-bandeau' %}" hx-target="#bandeau" hx-vals='{"semaine":"{{semaine_select}}"}'>
+                            <option value="generale">Generale</option>
+                            {% for groupe in groupes %}
+                            {% if groupe == groupe_act %}
+                            <option value="{{ groupe }}" selected>{{ groupe }}</option>
+                            {% else %}
+                            <option value="{{ groupe }}">{{ groupe }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </th>
+                    {% for moyenne in res_bandeau %}
+                    <th class="text-center align-middle" id="moyenne_{{forloop.counter}}">{{ moyenne }}</th>
+                    {% endfor %}
+                    {% if user.is_superuser %}
+                    <th colspan="4"></th>
+                    {% else %}
+                    <th colspan="2"></th>
+                    {% endif %}

@@ -1,0 +1,120 @@
+{% extends 'basegen.html' %}
+{% block styles %}
+{% load static %}
+{% endblock %}
+{% block center%}
+{% if user.is_authenticated %} <!-- Vérification que l'utilisateur soit connécté-->
+<!-- Si c'est un prof -->
+{% if not user.is_superuser %}
+<form action="{% url 'Dispos:gerer' %}" method="POST">
+    {% csrf_token %}
+<div class="d-flex-column justify-content-evenly m-3">
+    <div class="d-flex flex-column align-self-center table-responsive m-4">
+        <table class="table table-hover align-middle">
+            <thead style="position: sticky;top: 0px;background-color: white;">
+                <tr>
+                    <th colspan="4" class="table-dark text-center align-middle">
+                        Créneaux disponibles pour la semaine {{semaine_act.id_semaine}} [{{semaine_act.date_debut}} -
+                        {{semaine_act.date_fin}}]
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text-center align-middle col-md-1">Jour</th>
+                    <th class="text-center align-middle col-md-1">Heure</th>
+                    <th class="text-center align-middle col-md-1">Matière</th>
+                    <th class="text-center align-middle col-md-1">S'inscrire</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for soutien in soutiens %}
+                <tr>
+                    {% for jour in jours %}
+                    {% if forloop.counter == soutien.id_creneau.jour %}
+                    <th class="text-center col-md-1" scope="row">{{jour}}</th>
+                    {% endif %}
+                    {% endfor %}
+                    <td class="text-center col-md-1">{{soutien.id_creneau.heure_debut|date:'H:i'}}</td>
+                    <td class="text-center col-md-1">{{soutien.id_matiere.nom_matiere}}</td>
+                    <td class="text-center col-md-1">
+                        <button class="btn btn-info" type="submit" name="soutien" value="{{soutien.id_soutien}}">S'inscrire</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex flex-column align-self-center table-responsive m-4">
+        <table class="table table-hover align-middle">
+            <thead style="position: sticky;top: 0px;background-color: white;">
+                <tr>
+                    <th colspan="4" class="table-dark text-center align-middle">
+                        Créneaux où vous êtes inscrit pour la semaine {{semaine_act.id_semaine}} [{{semaine_act.date_debut}} -
+                        {{semaine_act.date_fin}}]
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text-center align-middle col-md-1">Jour</th>
+                    <th class="text-center align-middle col-md-1">Heure</th>
+                    <th class="text-center align-middle col-md-1">Matière</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for soutien in inscrits %}
+                <tr>
+                    {% for jour in jours %}
+                    {% if forloop.counter == soutien.id_soutien.id_creneau.jour %}
+                    <th class="text-center col-md-1" scope="row">{{jour}}</th>
+                    {% endif %}
+                    {% endfor %}
+                    <td class="text-center col-md-1">{{soutien.id_soutien.id_creneau.heure_debut|date:'H:i'}}</td>
+                    <td class="text-center col-md-1">{{soutien.id_soutien.id_matiere.nom_matiere}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex flex-column align-self-center table-responsive m-4">
+        <table class="table table-hover align-middle">
+            <thead style="position: sticky;top: 0px;background-color: white;">
+                <tr>
+                    <th colspan="4" class="table-dark text-center align-middle">
+                        Créneaux que vous organisez pour la semaine {{semaine_act.id_semaine}} [{{semaine_act.date_debut}} -
+                        {{semaine_act.date_fin}}]
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text-center align-middle col-md-1">Jour</th>
+                    <th class="text-center align-middle col-md-1">Heure</th>
+                    <th class="text-center align-middle col-md-1">Matière</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for soutien in orgas %}
+                <tr>
+                    {% for jour in jours %}
+                    {% if forloop.counter == soutien.id_soutien.id_creneau.jour %}
+                    <th class="text-center col-md-1" scope="row">{{jour}}</th>
+                    {% endif %}
+                    {% endfor %}
+                    <td class="text-center col-md-1">{{soutien.id_soutien.id_creneau.heure_debut|date:'H:i'}}</td>
+                    <td class="text-center col-md-1">{{soutien.id_soutien.id_matiere.nom_matiere}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</form>
+{% else %}
+<div class="d-flex justify-content-evenly m-3">
+    Connectez vous en tant que prof pour accéder à cette ressource
+</div>
+{% endif %}
+{% else %}
+<!-- on affiche la page de connexion /login -->
+{% include 'connexion.html' %}
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/dispo.js' %}"></script>
+{% endblock %}

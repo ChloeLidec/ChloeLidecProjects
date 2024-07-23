@@ -1,0 +1,197 @@
+{% extends 'basegen.html' %}
+{% block styles %}
+{% load static %}
+{% endblock %}
+{% block center %}
+{% if user.is_authenticated %}
+<div class="d-flex justify-content-evenly flex-wrap">
+    <div class="d-flex w-25 m-2 flex-wrap">
+        <div class="d-flex flex-column justify-content-evenly w-100">
+            <h2>Etudiant: </h2>
+            <p>{{ eleve.nom }} {{ eleve.prenom }}</p>
+            <p>{{eleve.groupe}}</p>
+            <div class="d-flex w-75 flex-column">
+                <div class="table-responsive" style="height: 40vh;">
+                    <table class="table table-hover align-middle">
+                        <thead style="position: sticky;top: 0px;background-color: white;">
+                            <tr>
+                                <th colspan="2" class="table-dark text-center align-middle">QCMs</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center align-middle col-md-1">Matiere</th>
+                                <th class="text-center align-middle col-md-1">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody style="overflow-y: scroll;">
+                            {% for qcm in qcms %}
+                            <tr>
+                                <th class="text-center col-md-1" scope="row">{{ qcm.id_qcm.id_matiere.nom_matiere }}
+                                    </td>
+                                    {% if qcm.note > 10 %}
+                                        <td class="text-center col-md-1 text-success">
+                                            {{qcm.note }}
+                                        </td>
+                                    {%else%}
+                                        <td class="text-center col-md-1 text-danger">
+                                            {{qcm.note }}</td>
+                                    {%endif%}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex flex-column">
+                    <h4>Sondage</h4>
+                    <p class="text-center"><b>Volontaire:</b> {{ sondage.volontaire }}</p>
+                    <p class="text-center"><b>Matiere souhaitée:</b> {{ sondage.matiere_voulue }}</p>
+                    <p class="text-center"><b>Commentaire:</b> {{sondage.commentaire}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-column w-50 m-3">
+        <h2>Suivi Etudiant</h2>
+        <div id="graphique" class="d-flex">
+            <canvas id="speedChart" width="600" height="400"></canvas>
+        </div>
+    </div>
+</div>
+{{ développement_web}}
+{% else %} <!-- on affiche la page de connexion /login -->
+{% include 'connexion.html' %}
+{% endif %}
+{% endblock %}
+
+<!-- On récupère le json nomé data on transofrme le json en dico -->
+
+
+{% block scripts %}
+<script src="{% static 'js/suivi_etu.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
+
+<!-- Dans le script JavaScript -->
+<script>
+    // On récupère le json nommé data et transforme le json en dictionnaire
+    var liste_noms_matieres = {{ liste_noms_matieres| safe }};
+    var liste_notes = {{ liste_notes| safe }};
+
+    var dico_data = {};
+    var nbSemaines = 0;
+
+    for (let i = 0; i < liste_notes.length; i++) {
+        var liste = liste_notes[i];
+        var nom_matiere = liste[0];
+        var dico = {};
+
+        for (let j = 1; j < liste.length; j++) {
+            if (liste[j] != -1) {
+                dico[j] = liste[j];
+                if (j > nbSemaines) {
+                    nbSemaines = j;
+                }
+            }
+        }
+
+        dico_data[nom_matiere] = dico;
+    }
+
+    // On reparcours le dictionnaire pour ajouter les semaines manquantes en mettant des valeurs nulles
+    for (let i = 0; i < liste_noms_matieres.length; i++) {
+        var nom_matiere = liste_noms_matieres[i];
+        var dico = dico_data[nom_matiere];
+
+        for (let semaine = 1; semaine <= nbSemaines; semaine++) {
+            if (dico[semaine] === undefined) {
+                dico[semaine] = null;
+            }
+        }
+    }
+
+
+    var abs = [];
+    for (i = 1; i <= nbSemaines; i++) {
+        abs.push(i);
+    }
+
+    datasets = [];
+    for (const [key, value] of Object.entries(dico_data)) {
+        var notes = [];
+        for (const [key2, value2] of Object.entries(value)) {
+            notes.push(value2);
+        }
+        var color = getRandomColor(); // Ajoute une fonction pour obtenir des couleurs aléatoires
+        var data = {
+            label: key,
+            data: notes,
+            lineTension: 0,
+            fill: false,
+            borderColor: color,
+            backgroundColor: color,
+            pointBorderColor: color,
+            pointBackgroundColor: color,
+        };
+        datasets.push(data);
+    }
+
+    function getRandomColor() {
+        // Fonction pour générer une couleur aléatoire en format hexadécimal
+        return '#' + Math.floor(Math.random() * 16777215).toString(16);
+    }
+
+    var speedCanvas = document.getElementById("speedChart");
+
+    Chart.defaults.global.defaultFontFamily = "Lato";
+    Chart.defaults.global.defaultFontSize = 14;
+
+    var speedData = {
+        labels: abs,
+        datasets: datasets,
+    };
+
+    var chartOptions = {
+        spanGaps: true,
+        legend: {
+            display: true,
+            position: 'top',
+            labels: {
+                boxWidth: 80,
+                fontColor: 'black',
+            },
+        },
+        title: {
+			display: true,
+			text: "Notes de l'étudiant aux qcms par semaine",
+            position: 'bottom'
+		},
+        scales: {
+            x: {
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Semaine',
+                },
+            },
+            y: {
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Note',
+                },
+                ticks: {
+                    beginAtZero: true,
+                    max: 100,
+                },
+            },
+        },
+    };
+
+    var lineChart = new Chart(speedCanvas, {
+        type: 'line',
+        data: speedData,
+        options: chartOptions,
+    });
+</script>
+
+
+{% endblock %}

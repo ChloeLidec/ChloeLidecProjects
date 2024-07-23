@@ -1,0 +1,16 @@
+<label class="m-1 align-self-center" for="profsout">Prof</label>
+<select class="form-select" name="profsout" id="profsout" class="m-2">
+    {% if prof %}
+    <option value="{{ prof.num_prof.id_prof }}" selected>{{ prof.num_prof.nom_prof }} {{ prof.num_prof.prenom_prof }}</option>
+    {% endif %}
+    <optgroup label="Profs dispos:">
+        {% for profd in profsd %}
+        <option value="{{ profd.id_prof }}">{{ profd.nom_prof }} {{ profd.prenom_prof }}</option>
+        {% endfor %}
+    </optgroup>
+    <optgroup label="Profs possibles:"></optgroup>
+    {% for profp in profsp %}
+    <option value="{{ profp.id_prof }}">{{ profp.nom_prof }} {{ profp.prenom_prof }}</option>
+    {% endfor %}
+    </optgroup>
+</select>

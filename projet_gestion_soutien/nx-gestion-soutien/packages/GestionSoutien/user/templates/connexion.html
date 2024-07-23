@@ -1,0 +1,69 @@
+<!doctype html>
+{% load static %}
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Connexion</title>
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+</head>
+<link rel="stylesheet" href="{% static 'css/connexion.css' %}">
+
+<main id="page_connexion">
+  <section class="vh-100 custom-section">
+    <div class="container-fluid h-custom">
+      <div class="row d-flex justify-content-center align-items-center vh-100">
+        <div class="col-md-9 col-lg-6 col-xl-5">
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid"
+            alt="Sample image">
+        </div>
+        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+          <form action="{% url 'user:login' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="divider d-flex align-items-center my-4">
+              <p class="text-center fw-bold mx-3 mb-0">Connexion</p>
+            </div>
+            {% if messages %}
+            <ul class="messages">
+              {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="form-outline mb-4">
+              <input type="text" id="form3Example3" class="form-control form-control-lg"
+                placeholder="Entrez un nom d'utilisateur" name="username"  required/>
+              <label class="form-label" for="form3Example3">Nom d'utilisateur </label>
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-3">
+              <input type="password" id="form3Example4" class="form-control form-control-lg"
+                placeholder="Entrez un mot de passe" name="password"  required/>
+              <label class="form-label" for="form3Example4">Mot de passe</label>
+              <p class="small fw-bold pt-1 mb-0"> <a href="{% url 'user:new-mdp' %}"
+                class="link-danger">Mot de passe oublié ?</a></p>
+            </div>
+
+
+            <div class="text-center text-lg-start mt-4 pt-2">
+              <button type="submit" class="btn btn-primary btn-lg"
+                style="padding-left: 2.5rem; padding-right: 2.5rem;">Se connecter</button>
+              <p class="small fw-bold mt-2 pt-1 mb-0">Vous n'êtes pas enregistré ? <a href="{% url 'user:register' %}"
+                  class="link-danger">S'inscrire</a></p>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+
+</html>

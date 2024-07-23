@@ -1,0 +1,75 @@
+{% extends 'basegen.html' %}
+{% block styles %}
+  {% load static %}
+  <!-- Ajoutez ici vos styles personnalisés si nécessaire -->
+{% endblock %}
+
+{% block center %}
+  {% if user.is_authenticated %}
+    <div class="container-fluid mt-5">
+      <h3 class="text-center">{{ texte }}</h3>
+
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th colspan={{ qcm.generale|length|add:1 }} class="table-dark text-center">Resultats QCM</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th class="text-center align-middle">Groupe</th>
+                  {% for matiere, note in qcm.generale.items %}
+                    <th class="text-center align-middle">{{ matiere }}</th>
+                  {% endfor %}
+                </tr>
+                {% for groupe, notes in qcm.items %}
+                  <tr>
+                    <td class="text-center align-middle">{{ groupe }}</td>
+                    {% for matiere, note in notes.items %}
+                      <td class="text-center align-middle">{{ note }}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center mt-4">
+        <div class="col-md-10">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th colspan="4" class="table-dark text-center align-middle">Resultats sondages</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th class="text-center align-middle">Matiere demandée</th>
+                  <th class="text-center align-middle">Nombre demandes</th>
+                  <th class="text-center align-middle">Moyenne generale</th>
+                </tr>
+                {% for matiere, stats in sondage.items %}
+                  <tr>
+                    <td class="text-center align-middle">{{ matiere }}</td>
+                    <td class="text-center align-middle">{{ stats.nb }}</td>
+                    <td class="text-center align-middle">{{ stats.moyenne }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  {% else %}
+    <!-- on affiche la page de connexion /login -->
+    {% include 'connexion.html' %}
+  {% endif %}
+{% endblock %}

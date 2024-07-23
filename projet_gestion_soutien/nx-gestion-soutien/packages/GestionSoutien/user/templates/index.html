@@ -1,0 +1,17 @@
+{% extends 'basegen.html' %}
+{% block styles %}
+{% load static %}
+{% endblock %}
+{% block center %}
+{% if user.is_authenticated %} <!-- Vérification que l'utilisateur soit connécté-->
+<!-- Si c'est un super user -->
+{% if user.is_superuser %}
+<p>Connecté en tant que admin sous {{ user.username }} | <a href="{% url 'user:logout' %}">Déconnexion</a></p>
+{% else %}
+<p>Connecté en tant que Enseignant sous {{ user.username }} | <a href="{% url 'user:logout' %}">Déconnexion</a></p>
+{% endif %}
+{% else %}
+<!-- on affiche la page de connexion /login -->
+{% include 'connexion.html' %}
+{% endif %}
+{% endblock %}

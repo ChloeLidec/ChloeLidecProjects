@@ -1,0 +1,22 @@
+<tr id="row{{eleve.num_etu}}">
+        <th class="text-center col-md-1" scope="row">
+            <input type="hidden" value="{{eleve.num_etu}}" name="eleve_sout"/>
+            <a href="{% url 'Suivi:suivi_etudiant' eleve.num_etu %}" target="_blank"><small> {{ eleve.nom }}
+                {{eleve.prenom}}</small></a>
+        </th>
+        <td class="text-center col-md-1" id="eleve_volontaire">
+            <select class="form-select" name="mat_sout" id="selec-ret" hx-get="{% url 'QCM:get-matiere' %}" hx-target="#matiere{{eleve.num_etu}}">
+                {% for matiere in matieres_gen %}
+                <option value="{{ matiere.id_matiere }}"><small>{{ matiere.nom_matiere}}</small></option>
+                {% endfor %}
+            </select>
+            <p id="matiere{{eleve.num_etu}}"></p>
+        </td>
+        <td class="text-center col-md-1" id="suggestions">
+            {% for sugg in suggestions %}
+               <small>{{sugg}} </small> </br>
+            {% endfor %}
+        </td>
+        <td class="text-center col-md-1"><span class="badge bg-danger" style="cursor:pointer" hx-delete="{% url 'QCM:delete-row' %}"
+            hx-target='#row{{eleve.num_etu}}' hx-swap='outerHTML'>X</span></td></tr>
+        <tr id="ajout-eleve"></tr>

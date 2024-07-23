@@ -1,0 +1,107 @@
+{% extends 'basegen.html' %}
+{% block styles %}
+{% load static %}
+{% endblock %}
+{% block center%}
+{% if user.is_authenticated %} <!-- Vérification que l'utilisateur soit connécté-->
+<!-- Si c'est un super user -->
+{% if user.is_superuser %}
+<div class="d-flex justify-content-evenly m-3">
+    <div class="d-flex flex-column w-25 m-3">
+        <form method="POST" action="{% url 'Dispos:vue' %}">
+            {% csrf_token %}
+            <div class="d-flex justify-content w-100">
+                <h2>Filtres</h2>
+                <button class="btn" id="dep_fil" type="button" onclick="plie_deplie_semaines()">
+                    <svg id="flecg" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                        class="bi bi-arrow-down-circle-fill m-1" viewBox="0 0 32 32">
+                        <path
+                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z" />
+                    </svg></button>
+            </div>
+            <div id="groupe_filtre" class="w-100">
+                <select class="form-select" name="semaine" id="selec-sem" class="m-3 w-75">
+                    {% for semaine in semaines %}
+                    {% if semaine.id_semaine == semaine_select %}
+                    <option value="{{ semaine.id_semaine }}" selected>Sem {{ semaine.id_semaine }} {{ semaine.date_debut }}</option>
+                    {% else %}
+                    <option value="{{ semaine.id_semaine }}">Sem {{ semaine.id_semaine }} {{ semaine.date_debut }}
+                    </option>
+
+                    {% endif %}
+                    {% endfor %}
+                </select>
+                <div class="d-flex justify-content w-100">
+                    <h3>Matières</h3>
+                    <button class="btn" id="dep_grp" type="button" onclick="plie_deplie_filtres()">
+                        <svg id="fleci" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                            class="bi bi-arrow-down-circle-fill m-1" viewBox="0 0 32 32">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z" />
+                        </svg></button>
+                </div>
+
+                <div id="grps_filtres" class="d-flex flex-column m-3 p-2">
+                    {% for matiere in matieres %}
+                    <div class="m-2">
+                        {% if matiere in matieres_select %}
+                        <input type="checkbox" id="{{ matiere }}" name="matiere" value="{{ matiere }}" class="form-check-input" checked>
+                        {% else %}
+                        <input type="checkbox" id="{{ matiere }}" name="matiere" value="{{ matiere }}" class="form-check-input">
+                        {% endif %}
+                        <label for="{{ matiere }}" class="form-check-label">{{ matiere }}</label>
+                    </div>
+                    {% endfor %}
+
+                </div>
+                <input class="btn btn-primary" id="liaison_bd" class="btn_valide" value="Valider" type="submit"></input>
+            </div>
+        </form>
+    </div>
+    <div class="d-flex flex-column w-75 table-responsive m-4" style="height: 75vh;">
+        <table class="table table-hover align-middle">
+            <thead style="position: sticky;top: 0px;background-color: white;">
+                <tr>
+                    <th colspan="{{matieres_select|length|add:2}}" class="table-dark text-center align-middle">
+                        Disponibilités
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text-center align-middle col-md-1">Enseignant</th>
+                    {% for matiere in matieres_select %}
+                    <th class="text-center align-middle col-md-1">{{ matiere }}</th>
+                    {% endfor %}
+                    <th class="text-center align-middle col-md-1">Disponiblités</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prof,mats_dispos in dispos.items %}
+                <tr>
+                    <th class="text-center col-md-1" scope="row">{{ prof.nom_prof }} {{ prof.prenom_prof }} {{ prof.id_prof }}</th>
+                    {% for matiere in matieres_select %}
+                    {% if matiere in mats_dispos.0 %}
+                    <td class="text-center col-md-1" style="background-color: rgb(0, 151, 18) !important;"></td>
+                    {% else %}
+                    <td class="text-center col-md-1" style="background-color: rgb(209, 3, 3) !important;"></td>
+                    {% endif %}
+                    {% endfor %}
+                    <td class="text-center col-md-1 date">{{ mats_dispos.1 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{%else%}
+<div class="d-flex justify-content-evenly m-3">
+    Vous ne pouvez pas accéder à ce contenu
+</div>
+{%endif%}
+{% else %}
+<!-- on affiche la page de connexion /login -->
+{% include 'connexion.html' %}
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/plie_dep.js' %}"></script>
+{% endblock %}

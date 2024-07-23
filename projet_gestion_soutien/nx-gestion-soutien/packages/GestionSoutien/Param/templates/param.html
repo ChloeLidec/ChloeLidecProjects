@@ -1,0 +1,484 @@
+{% extends 'basegen.html' %}
+{% block styles %}
+{% load static %}
+{% endblock %}
+{% block center %}
+{% if user.is_authenticated %} <!-- Vérification que l'utilisateur soit connécté-->
+<!-- Si c'est un super user -->
+{% if user.is_superuser %}
+<!-- On créee un nav avec deux onglets pour la gestion des créneaux et des Périodes on adaptera le contenu en fonction de l'onglet -->
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+         <button id="nav-creneaux-tab" class="nav-link active" data-bs-toggle="tab" data-bs-target="#nav-creneaux"
+            type="button" role="tab" aria-controls="nav-creneaux" aria-selected="true">Gestion des créneaux de
+            soutien</button>
+        <button id="nav-param-tab" class="nav-link" data-bs-toggle="tab" data-bs-target="#nav-param" type="button"
+            role="tab" aria-controls="nav-param" aria-selected="false">Gestion des paramètres par défault</button>
+        <button id="nav-fichiers-tab" class="nav-link" data-bs-toggle="tab" data-bs-target="#nav-fichiers" type="button"
+            role="tab" aria-controls="nav-fichiers" aria-selected="false">Import de fichiers</button>
+    </div>
+</nav>
+
+<!-- Quand on appuie sur Gestion des créneaux de soutien on charge le contenu de gestionCrenaux.html -->
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-creneaux" role="tabpanel" aria-labelledby="nav-creneaux-tab">
+        <form method="POST" action="{% url 'Param:parametres' %}">
+            {% csrf_token %}
+            <!-- Contenu de la gestion des créneaux -->
+            <div class="d-flex justify-content-evenly align-self-center m-2 flex-column">
+                <div class="form-group m-2 justify-content-evenly">
+                    <div class="d-flex flex-column m-4">
+                        <div class="d-flex flex-column m-2 p-2">
+                            <h3 class="titre_div">Gestion des créneaux de soutien</h3>
+                            <select class="form-select" name="Semaine" id="sem-select">
+                                {% for semaine in semaines %}
+                                {% if semaine.id_semaine == semaine_act.id_semaine %}
+                                <option value="{{ semaine.id_semaine }}" selected>Sem {{ semaine.id_semaine }}
+                                    {{ semaine.date_debut }}</option>
+                                {% else %}
+                                <option value="{{ semaine.id_semaine }}">Sem {{ semaine.id_semaine }} 
+                                    {{ semaine.date_debut }}
+                                </option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input type="hidden" name="semaine_sout" value="{{semaine_act.id_semaine}}"/>
+                        <div id="soutiens" class="d-flex flex-column p-3 rounded">
+                            {% include 'liste-soutiens.html' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <input class="btn btn-primary" name="creneausave" type="submit" value="Sauvegarder les modifications">
+            </div>
+    </div>
+    <div class="tab-pane fade" id="nav-param" role="tabpanel" aria-labelledby="nav-param-tab">
+            <div class="d-flex flex-column m-4 p-2">
+                <h3>Paramètres par défault</h3>
+                <div class="default_sett">
+                    <div class="d-flex flex-column justify-content-center border border-2 rounded m-2">
+                        <h4 class="align-self-center m-2">Créneau par défaut de soutien</h4>
+                        <div class="d-flex m-3">
+                            <label class="m-2" for="{{creneau.id_creneau.jour}}">Jour </label>
+                            <select class="form-select" name="jour_default_sout" id="{{creneau.id_creneau.jour}}">
+                                {% for jour in jours %}
+                                {% if forloop.counter == creneau.id_creneau.jour %}
+                                <option value="{{jour}}" selected>{{jour}}</option>
+                                {% else %}
+                                <option value="{{jour}}">{{jour}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                            <input class="m-2" type="time" value="{{creneau.id_creneau.heure_debut|time:'H:i'}}"
+                                id="{{creneau.id_creneau.heure_debut|time:'H:i'}}" name="heure_default_sout">
+                        </div>
+                    </div>
+                    <div class="d-flex m-2 justify-content-evenly flex-column border border-2 rounded">
+                        {% for periode in periodes %}
+                        <div class="d-flex flex-column m-2">
+                            <h4>Periode {{ periode.id_periode}}</h4>
+                            <div class="d-flex m-2">
+                                <label class="m-1" for="deb{{ periode.id_periode }}">
+                                    Date debut P{{ periode.id_periode}}</label>
+                                <input class="m-1" type="date" id="deb{{ periode.id_periode }}"
+                                    name="deb{{ periode.id_periode }}" value="{{ periode.date_debut|date:'Y-m-d'}}">
+                                <label class="m-1" for="fin{{ periode.id_periode }}">
+                                    Date fin P{{ periode.id_periode}}</label>
+                                <input class="m-1" type="date" id="fin{{ periode.id_periode }}"
+                                    name="fin{{ periode.id_periode }}" value="{{ periode.date_fin|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-flex m-2 justify-content-evenly flex-column border border-2 rounded">
+                        <div class="d-flex flex-column m-2">
+                            <h4>Paramètres mails</h4>
+                            <label>Profs par défaut concernés par les mails :</label>
+                            <ul style="list-style:none">
+                                {% for prof in profs %}
+                                <li>
+                                    {% if prof.id_prof in profs_defaut %}
+                                        <input type="checkbox" id="{{ prof.id_prof }}" name="prof_mail" value="{{ prof.id_prof }}" checked>
+                                    {% else %}
+                                        <input type="checkbox" id="{{ prof.id_prof }}" name="prof_mail" value="{{ prof.id_prof }}">
+                                    {% endif %}
+                                    <label for="{{ prof.id_prof }}">{{ prof.nom_prof }} {{ prof.prenom_prof }} - {{ prof.email_prof }}</label>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <input class="btn btn-primary" name="paramsave" type="submit" value="Sauvegarder les modifications" style="margin-bottom: 20px;">
+        </div>
+    </div>
+    </form>
+    <style>
+        .drop-zone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        .drop-zone.dragover {
+            border-color: #4CAF50;
+        }
+
+        .file-item {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* Ajout de cette propriété */
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .file-item span {
+            margin-right: 10px;
+        }
+
+        .file-item button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+
+
+
+        .file-list-container {
+            margin-top: 10px;
+        }
+
+        .btn-submit {
+            margin-top: 10px;
+        }
+    </style>
+
+
+    
+<div class="tab-pane fade" id="nav-fichiers" role="tabpanel" aria-labelledby="nav-fichiers-tab">
+    <form enctype="multipart/form-data" method="POST" action="{% url 'Param:parametres' %}">
+        {% csrf_token %}
+        <div class="d-flex flex-column m-4 p-2">
+            <h3>Import de fichiers</h3>
+            <hr>
+
+            <!-- Drop zone for Etudiants CSV -->
+            <h4>Import d'étudiants</h4>
+            <div class="drop-zone" id="drop-zone-etudiants">
+                <p>Glissez et déposez le fichier CSV des étudiants ici.</p>
+                <input type="file" name="formFileEtu" multiple style="display: none;" />
+            </div>
+
+            <!-- Drop zone for QCM CSV -->
+            <h4>Import de QCM</h4>
+            <div class="drop-zone" id="drop-zone-qcm">
+                <p>Glissez et déposez le fichier CSV QCM ici.</p>
+                <input type="file" name="formFileQCM" multiple style="display: none;"/>
+            </div>
+
+            <!-- Drop zone for Sondage CSV -->
+            <h4>Import de sondage</h4>
+            <div class="drop-zone" id="drop-zone-sondage">
+                <p>Glissez et déposez le fichier CSV de sondage ici.</p>
+                <input type="file" name="formFileSond" multiple style="display: none;" />
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <input class="btn btn-primary" name="envoifichiers" type="submit" value="Envoyer">
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function initializeDropZone(dropZoneId, handleFilesFunction) {
+        var dropZone = document.getElementById(dropZoneId);
+
+        dropZone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', function () {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+
+            var files = e.dataTransfer.files;
+            handleFilesFunction(files, dropZoneId);
+        });
+
+        dropZone.addEventListener('click', function () {
+            document.querySelector('input[type="file"]', dropZone).click();
+        });
+
+        var fileInput = document.querySelector('input[type="file"]', dropZone);
+        fileInput.addEventListener('change', function () {
+            handleFilesFunction(fileInput.files, dropZoneId);
+        });
+    }
+
+    function handleFilesEtudiants(files, dropZoneId) {
+        handleFiles(files, dropZoneId, 'formFileEtu');
+    }
+
+    function handleFilesSondage(files, dropZoneId) {
+        handleFiles(files, dropZoneId, 'formFileSond');
+    }
+
+    function handleFilesQCM(files, dropZoneId) {
+        handleFiles(files, dropZoneId, 'formFileQCM', 'nonmatQCM');
+    }
+
+    function handleFiles(files, dropZoneId, fieldName, matiereFieldName, hiddenMatiereFieldName) {
+        var fileListContainer = document.createElement('div');
+        fileListContainer.className = 'file-list-container';
+
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var selectedMatiere;
+
+            // Créer une nouvelle instance du champ de sélection pour chaque fichier
+            var selectMatiere = document.createElement('select');
+            selectMatiere.className = 'form-select';
+            selectMatiere.name = matiereFieldName;
+
+            // Ajouter les options de matières à partir de la liste nom_matiere
+            {% for matiere in nom_matiere %}
+            var option = document.createElement('option');
+            option.textContent = '{{matiere}}';
+            selectMatiere.appendChild(option);
+            {% endfor %}
+
+            // Mettre à jour la variable selectedMatiere en fonction de la sélection
+            selectedMatiere = selectMatiere.value;
+
+            addFileToList(file, fileListContainer, fieldName, matiereFieldName, selectedMatiere);
+        }
+
+        document.getElementById(dropZoneId).appendChild(fileListContainer);
+        updateHiddenInput(files, fieldName, hiddenMatiereFieldName);
+    }
+
+
+    function addFileToList(file, container, fieldName, matiereFieldName, selectedMatiere) {
+        var fileItem = document.createElement('div');
+        fileItem.className = 'file-item ' + fieldName;
+        container.appendChild(fileItem);
+
+        var fileName = document.createElement('span');
+        fileName.textContent = file.name;
+
+        var deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Supprimer';
+        deleteButton.className = 'btn btn-danger btn-sm';
+        deleteButton.addEventListener('click', function (e) {
+            e.stopPropagation();
+            fileItem.remove();
+            removeFromHiddenInput(file, fieldName, matiereFieldName);
+        });
+
+        if (matiereFieldName) {
+            var selectMatiere = document.createElement('select');
+            selectMatiere.className = 'form-select';
+            selectMatiere.name = matiereFieldName;
+
+            {% for matiere in nom_matiere %}
+            var option = document.createElement('option');
+            option.textContent = '{{matiere}}';
+            selectMatiere.appendChild(option);
+            {% endfor %}
+
+            selectMatiere.value = selectedMatiere;
+
+            fileItem.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+
+            fileItem.appendChild(fileName);
+            fileItem.appendChild(selectMatiere);
+        } else {
+            fileItem.appendChild(fileName);
+        }
+
+        fileItem.appendChild(deleteButton);
+
+        fileName.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    }
+
+    function removeFromHiddenInput(file, fieldName, matiereFieldName) {
+        var hiddenInput = document.querySelector('input[name="' + fieldName + '"]');
+        var hiddenMatiereInput = document.querySelector('input[name="' + matiereFieldName + '"]');
+
+        var presentFiles = hiddenInput.files;
+
+        if (presentFiles) {
+            var dataTransfer = new DataTransfer();
+
+            for (var i = 0; i < presentFiles.length; i++) {
+                if (presentFiles[i].name !== file.name) {
+                    dataTransfer.items.add(presentFiles[i]);
+                }
+            }
+
+            hiddenInput.files = dataTransfer.files;
+            hiddenMatiereInput.remove(file.name);
+        }
+    }
+
+    function updateHiddenInput(files, fieldName, hiddenMatiereFieldName) {
+        var hiddenInput = document.querySelector('input[name="' + fieldName + '"]');
+        var hiddenMatiereInput = document.querySelector('input[name="' + hiddenMatiereFieldName + '"]');
+
+        var presentFiles = hiddenInput.files;
+
+        if (presentFiles == null || presentFiles.length == 0) {
+            hiddenInput.files = files;
+            hiddenMatiereInput.files = files;
+        } else {
+            var dataTransfer = new DataTransfer();
+
+            for (var i = 0; i < presentFiles.length; i++) {
+                dataTransfer.items.add(presentFiles[i]);
+            }
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var existingFileIndex = -1;
+
+                for (var j = 0; j < presentFiles.length; j++) {
+                    if (presentFiles[j].name == file.name) {
+                        existingFileIndex = j;
+                        break;
+                    }
+                }
+
+                if (existingFileIndex > -1) {
+                    dataTransfer.items.remove(existingFileIndex);
+                }
+
+                dataTransfer.items.add(file);
+            }
+
+            var mergedFiles = dataTransfer.files;
+
+            hiddenInput.files = mergedFiles;
+            hiddenMatiereInput.files = mergedFiles;
+        }
+    }
+
+    function getFilesFromContainer(container) {
+        var fileItems = container.querySelectorAll('.file-item span');
+        var files = Array.from(fileItems).map(function (item) {
+            return item.textContent;
+        });
+        return files;
+    }
+
+    // Initialiser les zones de glisser-déposer
+    initializeDropZone('drop-zone-etudiants', handleFilesEtudiants);
+    initializeDropZone('drop-zone-qcm', handleFilesQCM);
+    initializeDropZone('drop-zone-sondage', handleFilesSondage);
+</script>
+
+
+
+
+
+
+
+
+</div>
+
+
+    {% else %}
+    <form method="POST" action="{% url 'Param:parametres' %}">
+        {% csrf_token %}
+        <div class="d-flex flex-column justify-content-center">
+            <h3 class="m-2">Gestion des matières</h3>
+            <h6 class="m-2">Si vous souaitez modifier les matières que vous pouvez enseigner, pour chaque matière il
+                vous faut avoir coché les périodes ou vous pouvez les enseigner</h6>
+            <div class="d-flex flex-wrap border border-2 m-2">
+                <!-- affiche matières -->
+                {% for matiere,dico_periode in matieres.items %}
+                <div class="d-flex border border-2 m-2">
+                    <fieldset>
+                        <legend class="m-1">{{ matiere.nom_matiere }}</legend>
+                        <div class="d-flex m-2">
+                            {% if dico_periode.P1 == 1 %}
+                            <div class="d-flex m-2">
+                                <input class="m-1" type="checkbox" id="{{ matiere.nom_matiere }}P1" name="P1"
+                                    value="{{matiere.id_matiere}}-P1" checked>
+                                <label class="m-1" for="{{ matiere.nom_matiere }}P1">P1</label>
+                            </div>
+                            {% else %}<div class="d-flex m-2">
+                                <input class="m-1" type="checkbox" id="{{ matiere.nom_matiere }}P1" name="P1"
+                                    value="{{matiere.id_matiere}}-P1">
+                                <label class="m-1" for="{{ matiere.nom_matiere }}P1">P1</label>
+                            </div>
+                            {% endif %}
+                            {% if dico_periode.P2 == 1 %}<div class="d-flex m-2">
+                                <input class="m-1" type="checkbox" id="{{ matiere.nom_matiere }}P2" name="P2"
+                                    value="{{matiere.id_matiere}}-P2" checked>
+                                <label class="m-1" for="{{ matiere.nom_matiere }}P2">P2</label>
+                            </div>
+                            {% else %}<div class="d-flex m-2">
+                                <input class="m-1" type="checkbox" id="{{ matiere.nom_matiere }}P2" name="P2"
+                                    value="{{matiere.id_matiere}}-P2">
+                                <label class="m-1" for="{{ matiere.nom_matiere }}P2">P2</label>
+                            </div>
+                            {% endif %}
+                            {% if dico_periode.P3 == 1 %}<div class="d-flex m-2">
+                                <input class="m-1" type="checkbox" id="{{ matiere.nom_matiere }}P3" name="P3"
+                                    value="{{matiere.id_matiere}}-P3" checked>
+                                <label class="m-1" for="{{ matiere.nom_matiere }}P3">P3</label>
+                            </div>
+                            {% else %}<div class="d-flex m-2">
+                                <input class="m-1" type="checkbox" id="{{ matiere.nom_matiere }}P3" name="P3"
+                                    value="{{matiere.id_matiere}}-P3">
+                                <label class="m-1" for="{{ matiere.nom_matiere }}P3">P3</label>
+                            </div>
+                            {% endif %}
+                            {% if dico_periode.P4 == 1 %}<div class="d-flex m-2">
+                                <input class="m-1" type="checkbox" id="{{ matiere.nom_matiere }}P4" name="P4"
+                                    value="{{matiere.id_matiere}}-P4" checked>
+                                <label class="m-1" for="{{ matiere.nom_matiere }}P4">P4</label>
+                            </div>
+                            {% else %}<div class="d-flex m-2">
+                                <input class="m-1" type="checkbox" id="{{ matiere.nom_matiere }}P4" name="P4"
+                                    value="{{matiere.id_matiere}}-P4">
+                                <label class="m-1" for="{{ matiere.nom_matiere }}P4">P4</label>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </fieldset>
+                </div>
+                {% endfor %}
+            </div>
+            <input class="btn btn-primary m-2 align-self-center" id="save_sett" type="submit"
+                value="Sauvegarder les modifications">
+        </div>
+    </form>
+    {% endif %}
+    {% endif %}
+    {% endblock %}

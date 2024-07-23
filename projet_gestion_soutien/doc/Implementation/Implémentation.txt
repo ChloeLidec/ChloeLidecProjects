@@ -1,0 +1,11 @@
+Nous avons suivis l'ensemble des bonne pratique de programmation du nomage des pareamètres en passant par la documentation que ce sois commentaire
+ou docstring. De plus nous avons respecter les bnonne pratique du gitlab c'est à dire : 'ayant eu les cours de GIT que plus tard dans l'année, 
+nous avons débuté notre projet avec nos propres normes:
+
+- Commit sous la forme "[ADD UPDATE DELETE] #numero de l'issue message" ou "#numero de l'issue [ADD UPDATE DELETE]  message"
+- branches fusionnées ensuite sur la branche dev
+
+par la suite, les noms des branches ont été adaptées pour suivre la forme:
+hotfix fix feature/numero issue/nom
+
+aussi, nous avons découvert les taches que plus tard sur github donc seuleument les issues les plus récentes ont des issues enfants liées.

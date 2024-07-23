@@ -1,0 +1,5 @@
+[MAIN]
+ignore-paths=./manage.py,./Dispos/migrations,./GestionSoutien/migrations./Param/migrations./QCM/migrations./Sondages/migrations./Soutien/migrations./Suivi/migrations./user/migrations
+
+[MESSAGES CONTROL]
+disable=missing-module-docstring,import-error,no-name-in-module,too-few-public-methods
