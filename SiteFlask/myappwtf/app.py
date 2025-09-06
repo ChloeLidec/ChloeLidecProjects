@@ -18,6 +18,6 @@ app.config['SQLALCHEMY_DATABASE_URI']=(
     'sqlite:///'+ mkpath('../myappwtf/myapp.db'))
 db = SQLAlchemy(app)
 
-app.config['SECRET_KEY']="020d884c-1cf8-475f-b4b5-2a56787a12c5"
+app.config['SECRET_KEY']=""
 
 login_manager = LoginManager(app)
