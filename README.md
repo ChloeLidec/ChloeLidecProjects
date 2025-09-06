@@ -1,5 +1,27 @@
 # Chloe Lidec projects
 
+## Work projects
+
+### Airmust
+
+While working for Airmust, I was able to develop multiple things. Firstly, I continued redesigning the website wether it was on the front or the back end. The website was a Prestashop 8 website and I did core changements to it (CSS or modifying simple parts of the website) as well as major changements when I developped multiple modules for it.
+
+The languages I used were PHP, HTML, CSS, JS, JQuery, Symfony
+
+A major part of the modules I added were for back office features such as commissions calculation for the commercials, reorganisation of the back office for a clearer interface, specific prices management or other implementations to fit the needs of the company. I also added small features to the front to make the clients path on our website easier.
+
+I also did a complete redesigning of the other website of the company to make it more modern and adapt it to the clients' use. For exemple, I developped a module for the clients to be able to choose a specific weight or personalize it and the price would be calculated accordingly. I also added customized forms so the potential clients could send messages to the company to show their interest in a specific part of our catalog.
+
+For those two websites, I was also responsible for the maintenance and assisting the users when they had special needs or functionalities they wished to add to the Prestashop.
+
+During this job, I also did technical maintenance on computers and electronicals machines and developped python programms, apps scripts programs or bash programms to optimize a few of the processes.
+
+## Personnal projects
+
+On my personnal time, I helped developped a Wordpress website, and also developped a Prestashop 9 online shop.
+
+I also am creating a video game from scratch (from the story to the developpement of the game)
+
 ## Repo
 
 In this repository you can find all the projects I have completed, wether at school or by myself.
@@ -49,7 +71,7 @@ In this directory, you can find a few files in bash that I made to be able to cr
 
 This is a website I developped with Téo Mikulic during my last year of BUT for a test in which we had to make a website using svelte components to show our understanding of the technology that is Svelte. You can read more details in the README file in the folder.
 
-## Other projects
+## Internships projects
 
 During the different interships I did all throughout my school years, I took part in a few projects that I can't share in details because I don't own them. In this next part, I will summarize them to show more of my experience.
 
